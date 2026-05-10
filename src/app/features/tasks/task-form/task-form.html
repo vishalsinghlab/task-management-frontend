@@ -1,13 +1,17 @@
-<button
-  (click)="showForm = !showForm"
-  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
->
-  Add Task
-</button>
+<!-- Create Button -->
+@if (!task) {
+  <button
+    (click)="showForm = !showForm"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+  >
+    Add Task
+  </button>
+}
 
-@if (showForm) {
-  <div class="bg-white rounded-2xl shadow p-6 mt-4 mb-6">
+@if (showForm || task) {
+  <div class="bg-white rounded-2xl shadow p-6 mt-4">
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Title -->
       <input
         type="text"
         formControlName="title"
@@ -15,13 +19,15 @@
         class="w-full border rounded-lg px-4 py-2"
       />
 
+      <!-- Description -->
       <textarea
         formControlName="description"
-        placeholder="Task description"
         rows="4"
+        placeholder="Task description"
         class="w-full border rounded-lg px-4 py-2"
       ></textarea>
 
+      <!-- Status -->
       <select formControlName="status" class="w-full border rounded-lg px-4 py-2">
         <option value="PENDING">Pending</option>
 
@@ -30,13 +36,40 @@
         <option value="COMPLETED">Completed</option>
       </select>
 
-      <button
-        type="submit"
-        [disabled]="loading"
-        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-      >
-        {{ loading ? 'Saving...' : 'Create Task' }}
-      </button>
+      <!-- Assignment -->
+      @if (currentUser?.role !== 'EMPLOYEE') {
+        <select formControlName="assignedTo" class="w-full border rounded-lg px-4 py-2">
+          <option value="">Select Assignee</option>
+
+          @for (user of users; track user._id) {
+            <option [value]="user._id">
+              {{ user.username }}
+              ({{ user.role }})
+            </option>
+          }
+        </select>
+      }
+
+      <!-- Buttons -->
+      <div class="flex gap-2">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+        >
+          {{ loading ? 'Saving...' : task ? 'Update Task' : 'Create Task' }}
+        </button>
+
+        @if (!task) {
+          <button
+            type="button"
+            (click)="showForm = false"
+            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+          >
+            Cancel
+          </button>
+        }
+      </div>
     </form>
   </div>
 }

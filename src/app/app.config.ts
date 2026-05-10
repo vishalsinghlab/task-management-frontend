@@ -2,6 +2,9 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+import { provideToastr } from 'ngx-toastr';
 
 import { authInterceptor } from './core/interceptors/auth';
 export const appConfig: ApplicationConfig = {
@@ -9,5 +12,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimations(),
+
+    provideToastr({
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
   ],
 };

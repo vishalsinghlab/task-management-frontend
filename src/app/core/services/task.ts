@@ -37,4 +37,8 @@ export class TaskService {
   deleteTask(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  assignTask(id: string, assignedTo: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}/assign`, { assignedTo });
+  }
 }

@@ -14,15 +14,20 @@ import { Task } from '../../../core/models/task';
 
 import { TaskForm } from '../task-form/task-form';
 
+import { ToastrService } from 'ngx-toastr';
+
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar, Sidebar, TaskForm],
+  imports: [CommonModule, FormsModule, Navbar, Sidebar, TaskForm, DatePipe],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css',
 })
 export class TaskList implements OnInit {
   private taskService = inject(TaskService);
+
+  private toastr = inject(ToastrService);
 
   tasks: Task[] = [];
 
@@ -60,10 +65,12 @@ export class TaskList implements OnInit {
     this.taskService.deleteTask(id).subscribe({
       next: () => {
         this.fetchTasks();
+        this.toastr.success('Task deleted successfully');
       },
 
       error: (error) => {
         console.error(error);
+        this.toastr.error(error.error?.message || 'Failed to delete task');
       },
     });
   }
