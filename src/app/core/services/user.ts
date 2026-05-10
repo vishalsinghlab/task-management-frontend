@@ -21,4 +21,10 @@ export class UserService {
   getTeamMembers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/team`);
   }
+
+  assignEmployee(employeeId: string, teamLeadId: string) {
+    return this.http.patch(`${this.apiUrl}/${employeeId}/assign-team-lead`, {
+      teamLeadId,
+    });
+  }
 }

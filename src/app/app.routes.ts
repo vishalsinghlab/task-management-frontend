@@ -5,6 +5,8 @@ import { Register } from './features/auth/register/register';
 import { authGuard } from './core/guards/auth';
 import { Dashboard } from './features/dashboard/dashboard/dashboard';
 import { TaskList } from './features/tasks/task-list/task-list';
+import { UserList } from './features/users/user-list/user-list';
+import { roleGuard } from './core/guards/role';
 
 export const routes: Routes = [
   {
@@ -24,5 +26,11 @@ export const routes: Routes = [
     path: 'tasks',
     component: TaskList,
     canActivate: [authGuard],
+  },
+
+  {
+    path: 'users',
+    component: UserList,
+    canActivate: [authGuard, roleGuard],
   },
 ];
