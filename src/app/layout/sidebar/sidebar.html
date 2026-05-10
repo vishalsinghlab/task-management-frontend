@@ -1,1 +1,16 @@
-<p>sidebar works!</p>
+<aside class="w-64 bg-gray-900 text-white min-h-screen p-6">
+  <h2 class="text-2xl font-bold mb-8">Task Manager</h2>
+
+  <nav class="space-y-2">
+    <!-- Dashboard -->
+    <a routerLink="/dashboard" class="block px-4 py-2 rounded-lg hover:bg-gray-800"> Dashboard </a>
+
+    <!-- Tasks -->
+    <a routerLink="/tasks" class="block px-4 py-2 rounded-lg hover:bg-gray-800"> Tasks </a>
+
+    <!-- Manager Only -->
+    @if (user?.role === 'MANAGER') {
+      <a routerLink="/users" class="block px-4 py-2 rounded-lg hover:bg-gray-800"> Users </a>
+    }
+  </nav>
+</aside>

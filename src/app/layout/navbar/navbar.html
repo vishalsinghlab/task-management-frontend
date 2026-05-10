@@ -1,1 +1,19 @@
-<p>navbar works!</p>
+<header class="bg-white shadow px-6 py-4 flex items-center justify-between">
+  <h1 class="text-2xl font-bold">Task Manager</h1>
+
+  <div class="flex items-center gap-4">
+    <div class="text-right">
+      <p class="font-semibold">
+        {{ user?.username }}
+      </p>
+
+      <p class="text-sm text-gray-500">
+        {{ user?.role }}
+      </p>
+    </div>
+
+    <button (click)="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+      Logout
+    </button>
+  </div>
+</header>

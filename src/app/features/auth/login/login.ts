@@ -11,7 +11,7 @@ import { AuthService } from '../../../core/services/auth';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.scss',
+  styleUrl: './login.css',
 })
 export class Login {
   private fb = inject(FormBuilder);
