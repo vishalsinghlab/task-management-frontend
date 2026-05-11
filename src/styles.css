@@ -1,5 +1,5 @@
 /* Global Styles */
-
+@import 'ngx-toastr/toastr';
 @import 'tailwindcss';
 
 html {

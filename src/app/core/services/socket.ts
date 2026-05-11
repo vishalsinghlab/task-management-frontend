@@ -10,7 +10,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:5000');
+    this.socket = io('https://task-management-1l3m.onrender.com');
   }
 
   listen(eventName: string) {

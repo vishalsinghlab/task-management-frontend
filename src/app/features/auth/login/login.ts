@@ -41,8 +41,8 @@ export class Login {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']);
         this.toastr.info('Login Successful');
+        this.router.navigate(['/dashboard']);
       },
 
       error: (error) => {
