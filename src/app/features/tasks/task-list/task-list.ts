@@ -91,7 +91,6 @@ export class TaskList implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.socketSubscriptions.forEach((sub) => sub.unsubscribe());
-
     this.fetchSubscription?.unsubscribe();
   }
 

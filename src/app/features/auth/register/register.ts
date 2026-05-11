@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../../../core/services/auth';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,8 @@ export class Register {
   private authService = inject(AuthService);
 
   private router = inject(Router);
+
+  private toastr = inject(ToastrService);
 
   loading = false;
 
@@ -36,7 +39,6 @@ export class Register {
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
-
       return;
     }
 
@@ -45,12 +47,13 @@ export class Register {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.router.navigate(['/login']);
+        this.toastr.info('Signup Successful');
       },
 
       error: (error) => {
         console.error(error);
-
         this.loading = false;
+        this.toastr.error(error?.error?.message || 'Failed to Signup');
       },
     });
   }

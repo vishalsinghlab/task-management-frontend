@@ -5,6 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,8 @@ export class Login {
   private authService = inject(AuthService);
 
   private router = inject(Router);
+
+  private toastr = inject(ToastrService);
 
   loading = false;
 
@@ -39,11 +42,13 @@ export class Login {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
+        this.toastr.info('Login Successful');
       },
 
       error: (error) => {
         console.error(error);
         this.loading = false;
+        this.toastr.error(error?.error?.message || 'Failed to login');
       },
     });
   }
