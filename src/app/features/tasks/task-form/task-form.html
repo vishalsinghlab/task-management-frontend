@@ -213,7 +213,7 @@
         <button
           type="button"
           (click)="showForm = false"
-          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 sm:w-auto"
+          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
         >
           <svg lucideXCircle class="h-5 w-5"></svg>
           Cancel
@@ -223,7 +223,7 @@
         <button
           type="submit"
           [disabled]="loading"
-          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
           @if (loading) {
             <svg lucideLoader2 class="h-5 w-5 animate-spin"></svg>
@@ -234,6 +234,7 @@
               <svg lucidePlus class="h-5 w-5"></svg>
             }
           }
+
           {{ loading ? 'Saving...' : task ? 'Update Task' : 'Create Task' }}
         </button>
       </div>
