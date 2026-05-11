@@ -212,6 +212,30 @@ http://localhost:4200
 
 ---
 
+---
+
+# Demo Credentials
+
+Use the following demo accounts to explore different role-based dashboards and permissions.
+
+| Role      | Email                 | Password     |
+| --------- | --------------------- | ------------ |
+| Manager   | manager@taskflow.com  | Manager@123  |
+| Team Lead | teamlead@taskflow.com | Lead@123     |
+| Employee  | employee@taskflow.com | Employee@123 |
+
+---
+
+# Role Access Overview
+
+| Role      | Access                                                                             |
+| --------- | ---------------------------------------------------------------------------------- |
+| Manager   | Full system access including task assignment, team management, and user management |
+| Team Lead | Manage own team tasks and assign tasks to team members                             |
+| Employee  | Manage personal assigned tasks only                                                |
+
+---
+
 # Screenshots
 
 ## Login Page

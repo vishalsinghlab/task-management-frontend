@@ -14,69 +14,62 @@
       <app-navbar></app-navbar>
 
       <!-- Page Content -->
-      <main class="flex-1 px-4 py-5 sm:px-5 sm:py-6 md:px-6 lg:px-8">
-        <!-- Header -->
-        <header class="mb-6 space-y-5 sm:mb-8">
-          <!-- Title with Icon -->
-          <div class="flex items-center gap-4">
+      <main class="flex-1 px-4 py-6 sm:px-6 sm:py-8 md:px-8 lg:px-10">
+        <!-- Header Section -->
+        <div class="mb-8">
+          <!-- Title Section -->
+          <div class="flex items-center gap-4 mb-6">
             <div
-              class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 shadow-lg shadow-blue-500/20"
+              class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm"
             >
-              <svg lucideCheckSquare class="h-7 w-7 text-white"></svg>
+              <svg lucideCheckSquare class="h-6 w-6 text-white"></svg>
             </div>
 
             <div>
               <h1
-                class="text-3xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 bg-clip-text text-transparent dark:from-white dark:via-gray-200 dark:to-gray-500 sm:text-4xl lg:text-4xl"
+                class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl"
               >
                 Tasks
               </h1>
-
-              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 sm:text-base">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
                 Manage and track your team's tasks
               </p>
             </div>
           </div>
 
-          <!-- Create Task -->
-          <div class="w-full min-w-0">
+          <!-- Create Task Form -->
+          <div class="w-full">
             <app-task-form
               (taskCreated)="onTaskCreated()"
               (formStateChange)="onCreateFormStateChange($event)"
             ></app-task-form>
           </div>
-        </header>
+        </div>
 
         <!-- Filter Section - Hide when create form is open -->
         @if (!isCreateFormOpen) {
-          <section class="mb-6 sm:mb-8">
+          <div class="mb-6">
             <div
-              class="flex flex-col gap-4 rounded-3xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:flex-row sm:items-center sm:justify-between"
+              class="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:flex-row sm:items-center sm:justify-between"
             >
               <div class="flex items-center gap-3">
                 <div
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800"
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
                 >
-                  <svg lucideFilter class="h-5 w-5 text-gray-600 dark:text-gray-400"></svg>
+                  <svg lucideFilter class="h-4 w-4 text-gray-600 dark:text-gray-400"></svg>
                 </div>
-
                 <div>
-                  <h2
-                    class="text-sm font-bold uppercase tracking-[0.15em] text-gray-700 dark:text-gray-300"
-                  >
+                  <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
                     Filter Tasks
                   </h2>
-
-                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Quickly find tasks by status
-                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Find tasks by status</p>
                 </div>
               </div>
 
               <select
                 [(ngModel)]="selectedStatus"
                 (change)="fetchTasks()"
-                class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-800 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 sm:w-[240px]"
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 sm:w-[200px]"
               >
                 <option value="">All Tasks</option>
                 <option value="PENDING">Pending</option>
@@ -84,58 +77,51 @@
                 <option value="COMPLETED">Completed</option>
               </select>
             </div>
-          </section>
+          </div>
         }
 
-        <!-- Loading -->
+        <!-- Loading State -->
         @if (loading) {
-          <div class="flex min-h-[300px] items-center justify-center">
+          <div class="flex min-h-[400px] items-center justify-center">
             <app-loading-spinner></app-loading-spinner>
           </div>
         }
 
         <!-- Empty State - Hide when create form is open -->
         @if (!loading && tasks.length === 0 && !isCreateFormOpen) {
-          <section
-            class="mx-auto max-w-2xl rounded-3xl border border-gray-200 bg-white px-6 py-14 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900"
-          >
-            <div
-              class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
-            >
-              <svg lucideClipboardList class="h-12 w-12 text-gray-400 dark:text-gray-500"></svg>
+          <div class="flex min-h-[400px] items-center justify-center">
+            <div class="max-w-md text-center">
+              <div
+                class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+              >
+                <svg lucideClipboardList class="h-8 w-8 text-gray-400 dark:text-gray-500"></svg>
+              </div>
+              <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">No tasks yet</h3>
+              <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                Get started by creating your first task
+              </p>
+              <button
+                (click)="openCreateTaskForm()"
+                class="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-all"
+              >
+                <svg lucidePlus class="h-4 w-4"></svg>
+                Create Task
+              </button>
             </div>
-
-            <h2
-              class="mt-6 text-2xl font-black tracking-tight text-gray-900 dark:text-white sm:text-3xl"
-            >
-              No Tasks Found
-            </h2>
-
-            <p class="mx-auto mt-3 max-w-md text-sm text-gray-500 dark:text-gray-400 sm:text-base">
-              Get started by creating your first task and managing your workflow efficiently.
-            </p>
-
-            <button
-              (click)="openCreateTaskForm()"
-              class="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.02] hover:bg-blue-700 active:scale-[0.98]"
-            >
-              <svg lucidePlus class="h-5 w-5"></svg>
-              <span>Create First Task</span>
-            </button>
-          </section>
+          </div>
         }
 
         <!-- Tasks Grid - Hide when create form is open -->
         @if (!loading && tasks.length > 0 && !isCreateFormOpen) {
-          <section class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             @for (task of tasks; track task._id) {
-              <article
-                class="group flex min-h-[340px] flex-col rounded-3xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"
+              <div
+                class="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
               >
-                <!-- Top -->
-                <div class="mb-5 flex items-start justify-between gap-3">
+                <!-- Status and ID -->
+                <div class="mb-3 flex items-start justify-between">
                   <span
-                    class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
+                    class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold"
                     [class]="getStatusClass(task.status)"
                   >
                     @switch (task.status) {
@@ -151,84 +137,59 @@
                     }
                     {{ task.status }}
                   </span>
-
-                  <span class="shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">
+                  <span class="text-xs text-gray-400 dark:text-gray-500">
                     #{{ task._id | slice: -6 }}
                   </span>
                 </div>
 
                 <!-- Title -->
                 <h3
-                  class="line-clamp-2 break-words text-xl font-black tracking-tight text-gray-900 dark:text-white"
+                  class="mb-2 line-clamp-2 text-base font-semibold tracking-tight text-gray-900 dark:text-white"
                 >
                   {{ task.title }}
                 </h3>
 
                 <!-- Description -->
-                <p
-                  class="mt-3 flex-1 line-clamp-4 break-words text-sm leading-relaxed text-gray-600 dark:text-gray-400"
-                >
+                <p class="mb-4 line-clamp-3 text-sm text-gray-600 dark:text-gray-400">
                   {{ task.description || 'No description provided' }}
                 </p>
 
-                <!-- Meta -->
-                <div class="mt-6 space-y-3 border-t border-gray-100 pt-5 dark:border-gray-800">
-                  <!-- Assigned -->
-                  <div class="flex items-center gap-2 text-sm">
-                    <svg lucideUser class="h-4 w-4 text-gray-500 dark:text-gray-400"></svg>
-
-                    <span class="font-medium text-gray-700 dark:text-gray-300">
+                <!-- Meta Info -->
+                <div class="mb-4 space-y-2 border-t border-gray-100 pt-3 dark:border-gray-800">
+                  <div class="flex items-center gap-2 text-xs">
+                    <svg lucideUser class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400"></svg>
+                    <span class="text-gray-700 dark:text-gray-300">
                       {{ task.assignedTo?.username || 'Unassigned' }}
                     </span>
                   </div>
-
-                  <!-- Date -->
-                  <div
-                    class="flex flex-wrap items-center gap-2 text-xs text-gray-400 dark:text-gray-500"
-                  >
-                    <svg lucideCalendar class="h-3 w-3"></svg>
-
-                    <span>
-                      {{ task.createdAt | date: 'MMM d, yyyy' }}
-                    </span>
-
-                    <span>•</span>
-
-                    <svg lucideClock class="h-3 w-3"></svg>
-
-                    <span>
-                      {{ task.createdAt | date: 'h:mm a' }}
-                    </span>
+                  <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                    <svg lucideCalendar class="h-3.5 w-3.5"></svg>
+                    <span>{{ task.createdAt | date: 'MMM d, yyyy' }}</span>
                   </div>
                 </div>
 
                 <!-- Actions -->
-                <div class="mt-6 border-t border-gray-100 pt-5 dark:border-gray-800">
-                  <div class="flex flex-col gap-3">
-                    <!-- Edit Button - Opens Modal -->
-                    <button
-                      type="button"
-                      (click)="openEditModal(task)"
-                      class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.02] hover:bg-blue-700 active:scale-[0.98]"
-                    >
-                      <svg lucidePencil class="h-5 w-5"></svg>
-                      Edit
-                    </button>
-
-                    <!-- Delete Button -->
-                    <button
-                      type="button"
-                      (click)="onDelete(task._id)"
-                      class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-red-500 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.02] hover:bg-red-600 active:scale-[0.98]"
-                    >
-                      <svg lucideTrash2 class="h-5 w-5"></svg>
-                      Delete
-                    </button>
-                  </div>
+                <div class="flex gap-2 border-t border-gray-100 pt-3 dark:border-gray-800">
+                  <button
+                    type="button"
+                    (click)="openEditModal(task)"
+                    class="flex-1 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-all"
+                  >
+                    <svg lucidePencil class="h-4 w-4"></svg>
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    (click)="onDelete(task._id)"
+                    class="flex-1 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-red-500 px-3 text-sm font-medium text-white shadow-sm hover:bg-red-600 transition-all"
+                  >
+                    <svg lucideTrash2 class="h-4 w-4"></svg>
+                    Delete
+                  </button>
                 </div>
-              </article>
+              </div>
             }
-          </section>
+          </div>
         }
       </main>
     </div>
@@ -244,11 +205,9 @@
       (click)="closeEditModal()"
     ></div>
 
-    <!-- Modal Content with better scrollbar -->
-    <div class="relative w-full max-w-2xl max-h-[90vh] animate-fade-in-up">
-      <div
-        class="overflow-y-auto max-h-[90vh] rounded-3xl scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800"
-      >
+    <!-- Modal Content -->
+    <div class="relative w-full max-w-lg max-h-[85vh] animate-fade-in-up">
+      <div class="overflow-y-auto max-h-[85vh] rounded-xl">
         <app-task-form
           [task]="selectedTask"
           [isModal]="true"

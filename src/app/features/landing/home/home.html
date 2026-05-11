@@ -1,0 +1,610 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900"
+>
+  <div
+    class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900"
+  >
+    <!-- NAVBAR -->
+    <header
+      class="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80"
+    >
+      <div
+        class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:px-8"
+      >
+        <!-- Logo -->
+        <a routerLink="/" class="flex items-center gap-3 transition-opacity hover:opacity-80">
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm"
+          >
+            <svg lucideZap class="h-5 w-5 text-white"></svg>
+          </div>
+
+          <div class="min-w-0">
+            <h1
+              class="truncate text-base font-bold tracking-tight text-gray-900 dark:text-white sm:text-lg"
+            >
+              TaskFlow
+            </h1>
+
+            <p class="hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
+              Enterprise Task Operations
+            </p>
+          </div>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden items-center gap-8 text-sm md:flex">
+          <a
+            href="#features"
+            class="text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
+            Features
+          </a>
+          <a
+            href="#workflow"
+            class="text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
+            Workflow
+          </a>
+          <a
+            href="#roles"
+            class="text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
+            Roles
+          </a>
+          <a
+            routerLink="/dashboard"
+            class="text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
+            Dashboard
+          </a>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Mobile Menu Button -->
+          <button
+            type="button"
+            data-mobile-menu-button
+            (click)="mobileMenuOpen = !mobileMenuOpen"
+            class="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 md:hidden"
+          >
+            <svg lucideMenu class="h-5 w-5 text-gray-700 dark:text-gray-300"></svg>
+          </button>
+
+          @if (!isLoggedIn()) {
+            <a
+              routerLink="/login"
+              class="hidden rounded-xl px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 sm:inline-flex"
+            >
+              Login
+            </a>
+            <a
+              routerLink="/register"
+              class="inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-md"
+            >
+              Start Free
+            </a>
+          } @else {
+            <div class="relative">
+              <button
+                data-user-menu-button
+                (click)="toggleUserMenu()"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-sm font-semibold text-white shadow-sm transition-all hover:scale-105 hover:shadow-md"
+              >
+                {{ getUserInitials() }}
+              </button>
+
+              @if (showUserMenu) {
+                <div
+                  data-user-menu
+                  class="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900"
+                >
+                  <div class="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                      {{ getUser()?.username }}
+                    </p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      {{ getUser()?.role }}
+                    </p>
+                  </div>
+                  <button
+                    (click)="logout()"
+                    class="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-red-600 transition-colors hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-800"
+                  >
+                    <svg lucideLogOut class="h-4 w-4"></svg>
+                    Logout
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Menu Dropdown - Moved OUTSIDE the header -->
+    @if (mobileMenuOpen) {
+      <div
+        data-mobile-menu
+        class="fixed top-14 left-0 right-0 z-40 border-b border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950 md:hidden"
+        style="max-height: calc(100vh - 56px); overflow-y: auto"
+      >
+        <nav class="flex flex-col p-4 gap-1">
+          <a
+            href="#features"
+            (click)="mobileMenuOpen = false"
+            class="rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            Features
+          </a>
+          <a
+            href="#workflow"
+            (click)="mobileMenuOpen = false"
+            class="rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            Workflow
+          </a>
+          <a
+            href="#roles"
+            (click)="mobileMenuOpen = false"
+            class="rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            Roles
+          </a>
+          <a
+            routerLink="/dashboard"
+            (click)="mobileMenuOpen = false"
+            class="rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            Dashboard
+          </a>
+
+          <div class="h-px bg-gray-200 dark:bg-gray-800 my-2"></div>
+
+          @if (!isLoggedIn()) {
+            <a
+              routerLink="/login"
+              (click)="mobileMenuOpen = false"
+              class="rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            >
+              Login
+            </a>
+            <a
+              routerLink="/register"
+              (click)="mobileMenuOpen = false"
+              class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white text-center transition-colors hover:bg-blue-700"
+            >
+              Start Free
+            </a>
+          } @else {
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-2 mt-2">
+              <div class="flex items-center gap-3 px-4 py-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-sm font-semibold text-white"
+                >
+                  {{ getUserInitials() }}
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                    {{ getUser()?.username }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ getUser()?.role }}
+                  </p>
+                </div>
+              </div>
+              <button
+                (click)="logout(); mobileMenuOpen = false"
+                class="flex w-full items-center gap-2 rounded-xl px-4 py-3 text-left text-sm font-medium text-red-600 transition-colors hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-800"
+              >
+                <svg lucideLogOut class="h-4 w-4"></svg>
+                Logout
+              </button>
+            </div>
+          }
+        </nav>
+      </div>
+    }
+
+    <!-- HERO -->
+    <section class="relative overflow-hidden px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
+      <!-- Background -->
+      <div class="absolute inset-0 -z-10 overflow-hidden">
+        <div
+          class="absolute -left-1/2 -top-1/2 h-[400px] w-[400px] rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-3xl sm:h-[500px] sm:w-[500px]"
+        ></div>
+
+        <div
+          class="absolute -bottom-1/2 -right-1/2 h-[400px] w-[400px] rounded-full bg-gradient-to-r from-violet-400/20 to-indigo-400/20 blur-3xl sm:h-[500px] sm:w-[500px]"
+        ></div>
+      </div>
+
+      <div class="mx-auto max-w-7xl">
+        <div class="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+          <!-- LEFT -->
+          <div>
+            <div
+              class="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-xs text-blue-700 dark:text-blue-300 sm:text-sm"
+            >
+              <span class="flex h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"></span>
+
+              Real-time collaborative workspace
+            </div>
+
+            <h1
+              class="text-3xl font-black tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-7xl"
+            >
+              Team task management built for
+
+              <span
+                class="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent"
+              >
+                modern workflows.
+              </span>
+            </h1>
+
+            <p
+              class="mt-6 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-400 sm:text-lg"
+            >
+              Coordinate teams, assign responsibilities, track progress, and manage workflows with a
+              role-based system designed for Managers, Team Leads, and Employees.
+            </p>
+
+            <!-- Buttons -->
+            <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+              @if (!isLoggedIn()) {
+                <a
+                  routerLink="/register"
+                  class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] hover:bg-blue-700 sm:w-auto"
+                >
+                  <svg lucideRocket class="h-5 w-5"></svg>
+                  Create Workspace
+                </a>
+
+                <a
+                  routerLink="/login"
+                  class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-8 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 sm:w-auto"
+                >
+                  <svg lucideLayoutDashboard class="h-5 w-5"></svg>
+                  Explore Dashboard
+                </a>
+              } @else {
+                <a
+                  routerLink="/dashboard"
+                  class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] hover:bg-blue-700 sm:w-auto"
+                >
+                  <svg lucideLayoutDashboard class="h-5 w-5"></svg>
+                  Go to Dashboard
+                </a>
+              }
+            </div>
+
+            <!-- Metrics -->
+            <div class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
+              <div>
+                <h3 class="text-3xl font-black text-gray-900 dark:text-white">3</h3>
+
+                <p class="mt-2 text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Roles
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-3xl font-black text-gray-900 dark:text-white">Live</h3>
+
+                <p class="mt-2 text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Sync
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-3xl font-black text-gray-900 dark:text-white">100%</h3>
+
+                <p class="mt-2 text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Responsive
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT - Dashboard Preview -->
+          <div class="relative">
+            <div
+              class="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-violet-600/20 blur-3xl rounded-full"
+            ></div>
+            <div
+              class="relative rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900"
+            >
+              <!-- Topbar -->
+              <div
+                class="flex h-14 items-center justify-between border-b border-gray-200 px-5 dark:border-gray-800"
+              >
+                <div class="flex items-center gap-2">
+                  <div class="h-3 w-3 rounded-full bg-red-500"></div>
+                  <div class="h-3 w-3 rounded-full bg-yellow-500"></div>
+                  <div class="h-3 w-3 rounded-full bg-green-500"></div>
+                </div>
+                <div
+                  class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                >
+                  LIVE SYSTEM
+                </div>
+              </div>
+
+              <div class="p-6 space-y-6">
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-4">
+                  <div
+                    class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Pending</p>
+                    <h3 class="text-2xl font-black text-gray-900 dark:text-white">14</h3>
+                  </div>
+                  <div
+                    class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <p class="text-sm text-gray-500 dark:text-gray-400">In Progress</p>
+                    <h3 class="text-2xl font-black text-blue-600 dark:text-blue-400">6</h3>
+                  </div>
+                  <div
+                    class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Completed</p>
+                    <h3 class="text-2xl font-black text-green-600 dark:text-green-400">28</h3>
+                  </div>
+                </div>
+
+                <!-- Tasks -->
+                <div class="space-y-3">
+                  <div
+                    class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <div>
+                      <h4 class="font-semibold text-gray-900 dark:text-white">
+                        Realtime Notification System
+                      </h4>
+                      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Assigned to Team Lead
+                      </p>
+                    </div>
+                    <span
+                      class="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-400"
+                      >IN_PROGRESS</span
+                    >
+                  </div>
+
+                  <div
+                    class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <div>
+                      <h4 class="font-semibold text-gray-900 dark:text-white">
+                        Angular Dashboard Refactor
+                      </h4>
+                      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Assigned to Employee
+                      </p>
+                    </div>
+                    <span
+                      class="rounded-full bg-green-500/10 px-3 py-1 text-xs font-semibold text-green-700 dark:text-green-400"
+                      >COMPLETED</span
+                    >
+                  </div>
+
+                  <div
+                    class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <div>
+                      <h4 class="font-semibold text-gray-900 dark:text-white">
+                        MongoDB Aggregation Optimization
+                      </h4>
+                      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Assigned to Manager
+                      </p>
+                    </div>
+                    <span
+                      class="rounded-full bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-700 dark:text-yellow-400"
+                      >PENDING</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="px-6 py-20 bg-white dark:bg-gray-900">
+      <div class="mx-auto max-w-7xl">
+        <div class="max-w-3xl mb-16">
+          <p
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 mb-4"
+          >
+            Features
+          </p>
+          <h2
+            class="text-3xl font-black tracking-tight text-gray-900 dark:text-white sm:text-4xl md:text-5xl"
+          >
+            Designed for high-performance team collaboration.
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div
+            class="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600"
+            >
+              <svg lucideUsers class="h-6 w-6 text-white"></svg>
+            </div>
+            <h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Role Management</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Dedicated permission layers for managers, leads, and employees.
+            </p>
+          </div>
+
+          <div
+            class="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-600"
+            >
+              <svg lucideZap class="h-6 w-6 text-white"></svg>
+            </div>
+            <h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Realtime Updates</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Socket-based synchronization across all active dashboards.
+            </p>
+          </div>
+
+          <div
+            class="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-green-600"
+            >
+              <svg lucideBarChart class="h-6 w-6 text-white"></svg>
+            </div>
+            <h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Task Analytics</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Track status, progress, completion, and team productivity.
+            </p>
+          </div>
+
+          <div
+            class="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-red-600"
+            >
+              <svg lucideShield class="h-6 w-6 text-white"></svg>
+            </div>
+            <h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Secure Access</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              JWT authentication with protected routes and API authorization.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section id="roles" class="px-6 py-20">
+      <div class="mx-auto max-w-7xl">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <p
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 mb-4"
+          >
+            Workflow Roles
+          </p>
+          <h2
+            class="text-3xl font-black tracking-tight text-gray-900 dark:text-white sm:text-4xl md:text-5xl"
+          >
+            Built for structured teams.
+          </h2>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+          <div
+            class="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 inline-flex rounded-full bg-violet-500/10 px-4 py-1.5 text-sm font-semibold text-violet-700 dark:text-violet-400"
+            >
+              MANAGER
+            </div>
+            <h3 class="mb-3 text-xl font-bold text-gray-900 dark:text-white">
+              Complete Team Visibility
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Managers can monitor all teams, assign tasks, reassign workloads, and manage task
+              operations globally.
+            </p>
+          </div>
+
+          <div
+            class="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 inline-flex rounded-full bg-blue-500/10 px-4 py-1.5 text-sm font-semibold text-blue-700 dark:text-blue-400"
+            >
+              TEAM LEAD
+            </div>
+            <h3 class="mb-3 text-xl font-bold text-gray-900 dark:text-white">Team Coordination</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Team Leads can assign and manage tasks for their own members while collaborating with
+              managers.
+            </p>
+          </div>
+
+          <div
+            class="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <div
+              class="mb-4 inline-flex rounded-full bg-emerald-500/10 px-4 py-1.5 text-sm font-semibold text-emerald-700 dark:text-emerald-400"
+            >
+              EMPLOYEE
+            </div>
+            <h3 class="mb-3 text-xl font-bold text-gray-900 dark:text-white">Focused Execution</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Employees can create, update, and complete their assigned work in a distraction-free
+              workspace.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section - Hide when logged in -->
+    @if (!isLoggedIn()) {
+      <section class="px-6 py-20">
+        <div
+          class="mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 p-8 text-center sm:p-12"
+        >
+          <h2 class="text-3xl font-black text-white sm:text-4xl">
+            Ready to Boost Your Team's Productivity?
+          </h2>
+          <p class="mx-auto mt-4 max-w-2xl text-blue-100">
+            Join thousands of teams who trust TaskFlow to get work done.
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a
+              routerLink="/register"
+              class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-8 text-sm font-semibold text-blue-600 transition-all hover:scale-105 hover:shadow-xl"
+            >
+              <svg lucideRocket class="h-5 w-5"></svg>
+              Get Started Free
+            </a>
+            <a
+              routerLink="/login"
+              class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-8 text-sm font-semibold text-white transition-all hover:bg-white/20"
+            >
+              <svg lucideLogIn class="h-5 w-5"></svg>
+              Sign In
+            </a>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-10 mt-16">
+      <div
+        class="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div class="text-center md:text-left">
+          <h3 class="font-bold text-lg text-gray-900 dark:text-white">TaskFlow</h3>
+          <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">
+            Built with Angular, Node.js, Express, MongoDB & Socket.IO
+          </p>
+        </div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">
+          © 2026 TaskFlow. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>

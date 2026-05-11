@@ -7,11 +7,35 @@ import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../../../core/services/auth';
 import { ToastrService } from 'ngx-toastr';
+import {
+  LucideUserPlus,
+  LucideUser,
+  LucideMail,
+  LucideLock,
+  LucideUsers,
+  LucideChevronDown,
+  LucideEye,
+  LucideEyeOff,
+  LucideLoader2,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    LucideUserPlus,
+    LucideUser,
+    LucideMail,
+    LucideLock,
+    LucideUsers,
+    LucideChevronDown,
+    LucideEye,
+    LucideEyeOff,
+    LucideLoader2,
+  ],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -27,6 +51,12 @@ export class Register {
   private cdr = inject(ChangeDetectorRef);
 
   loading = false;
+
+  showPassword = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   registerForm = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(3)]],

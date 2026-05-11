@@ -8,12 +8,12 @@ import { TaskList } from './features/tasks/task-list/task-list';
 import { UserList } from './features/users/user-list/user-list';
 import { roleGuard } from './core/guards/role';
 import { NotFound } from './shared/pages/not-found/not-found';
+import { Home } from './features/landing/home/home';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    component: Home,
   },
 
   {

@@ -1,124 +1,85 @@
 <header
-  class="sticky top-0 z-50 border-b border-white/10 bg-white/80 backdrop-blur-2xl dark:bg-gray-950/80"
+  class="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80"
 >
-  <!-- Gradient Accent -->
-  <div
-    class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent"
-  ></div>
-
-  <div class="relative px-4 py-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-      <!-- Brand Section -->
-      <div class="flex items-center justify-between gap-4">
-        <div class="flex items-center gap-4 min-w-0">
-          <!-- Logo -->
-          <div class="relative shrink-0">
-            <div class="absolute inset-0 rounded-2xl bg-blue-500/20 blur-xl"></div>
-
-            <div
-              class="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 shadow-xl shadow-blue-500/20 ring-1 ring-white/10"
-            >
-              <svg lucideZap class="h-7 w-7 text-white"></svg>
-            </div>
-          </div>
-
-          <!-- Title -->
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <h1
-                class="truncate text-2xl font-black tracking-tight text-gray-900 dark:text-white sm:text-3xl"
-              >
-                TaskFlow
-              </h1>
-            </div>
-
-            <p class="mt-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-              Smart Team Management Platform
-            </p>
-          </div>
-        </div>
-
-        <!-- Mobile Theme Toggle -->
-        <button
-          type="button"
-          (click)="toggleTheme()"
-          class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gray-200/70 bg-white/80 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-95 dark:border-gray-800 dark:bg-gray-900/80 dark:hover:bg-gray-800 sm:hidden"
-          [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between gap-3">
+      <!-- LEFT -->
+      <div class="flex min-w-0 items-center gap-3">
+        <!-- Logo -->
+        <a
+          routerLink="/"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm transition-all hover:scale-105 hover:shadow-md"
         >
-          @if (!isDarkMode()) {
-            <svg lucideMoon class="h-5 w-5 text-gray-700"></svg>
-          } @else {
-            <svg lucideSun class="h-5 w-5 text-yellow-300"></svg>
-          }
-        </button>
+          <svg lucideZap class="h-5 w-5 text-white"></svg>
+        </a>
+
+        <!-- Brand -->
+        <a routerLink="/" class="min-w-0 transition-opacity hover:opacity-80">
+          <h1
+            class="truncate text-base font-bold tracking-tight text-gray-900 dark:text-white sm:text-lg"
+          >
+            TaskFlow
+          </h1>
+
+          <p class="hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
+            Smart Team Management Platform
+          </p>
+        </a>
       </div>
 
-      <!-- Right Actions -->
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <!-- User Profile Card -->
+      <!-- RIGHT -->
+      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
         @if (user) {
+          <!-- User Card -->
           <div
-            class="group flex items-center justify-between gap-4 rounded-2xl border border-gray-200/70 bg-white/80 px-4 py-3 shadow-sm backdrop-blur transition-all duration-200 hover:shadow-md dark:border-gray-800 dark:bg-gray-900/80"
+            class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-2 py-1.5 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:px-3 sm:py-2"
           >
-            <div class="flex items-center gap-3 min-w-0">
-              <!-- Avatar -->
-              <div class="relative shrink-0">
-                <div class="absolute inset-0 rounded-xl bg-blue-500/20 blur-lg"></div>
-
-                <div
-                  class="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-lg"
-                >
-                  <svg lucideUser class="h-5 w-5"></svg>
-                </div>
-              </div>
-
-              <!-- User Info -->
-              <div class="min-w-0">
-                <p class="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                  {{ user.username }}
-                </p>
-
-                <div class="mt-1 flex items-center gap-2">
-                  <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-
-                  <p
-                    class="truncate text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-                  >
-                    {{ user.role }}
-                  </p>
-                </div>
-              </div>
+            <!-- Avatar -->
+            <div
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white"
+            >
+              <svg lucideUser class="h-4 w-4"></svg>
             </div>
 
-            <!-- Desktop Theme Toggle -->
-            <button
-              type="button"
-              (click)="toggleTheme()"
-              class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-sm active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 sm:inline-flex"
-              [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
-            >
-              @if (!isDarkMode()) {
-                <svg lucideMoon class="h-5 w-5 text-gray-700"></svg>
-              } @else {
-                <svg lucideSun class="h-5 w-5 text-yellow-300"></svg>
-              }
-            </button>
+            <!-- Info -->
+            <div class="hidden min-w-0 sm:block">
+              <p class="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                {{ user.username }}
+              </p>
+
+              <p
+                class="truncate text-[10px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+              >
+                {{ user.role }}
+              </p>
+            </div>
           </div>
         }
 
-        <!-- Logout Button -->
+        <!-- Theme Toggle -->
+        <button
+          type="button"
+          (click)="toggleTheme()"
+          class="cursor-pointer inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-sm transition-colors hover:bg-gray-50 active:scale-95 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
+          [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+        >
+          @if (!isDarkMode()) {
+            <svg lucideMoon class="h-4 w-4 text-gray-700"></svg>
+          } @else {
+            <svg lucideSun class="h-4 w-4 text-yellow-500"></svg>
+          }
+        </button>
+
+        <!-- Logout -->
         <button
           type="button"
           (click)="logout()"
-          class="group inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-500 to-rose-600 px-5 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-500/30 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+          class="cursor-pointer inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-red-500 px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 sm:px-4"
           aria-label="Logout"
         >
-          <svg
-            lucideLogOut
-            class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
-          ></svg>
+          <svg lucideLogOut class="h-4 w-4"></svg>
 
-          <span>Logout</span>
+          <span class="hidden sm:inline"> Logout </span>
         </button>
       </div>
     </div>

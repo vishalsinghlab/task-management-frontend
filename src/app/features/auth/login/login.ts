@@ -2,15 +2,33 @@ import { Component, inject, ChangeDetectorRef } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth';
 import { ToastrService } from 'ngx-toastr';
 
+import {
+  LucideZap,
+  LucideMail,
+  LucideLock,
+  LucideEye,
+  LucideEyeOff,
+  LucideLoader2,
+} from '@lucide/angular';
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    LucideZap,
+    LucideMail,
+    LucideLock,
+    LucideEye,
+    LucideEyeOff,
+    LucideLoader2,
+    RouterLink,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -26,6 +44,12 @@ export class Login {
   private cdr = inject(ChangeDetectorRef);
 
   loading = false;
+
+  showPassword = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

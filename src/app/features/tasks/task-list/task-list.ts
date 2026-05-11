@@ -127,36 +127,24 @@ export class TaskList implements OnInit, OnDestroy {
   fetchTasks(options?: { silent?: boolean }): void {
     const silent = options?.silent === true;
 
-    console.log('BEFORE TRUE', this.loading);
-
     if (!silent) {
       this.loading = true;
       this.cdr.detectChanges();
     }
 
-    console.log('AFTER TRUE', this.loading);
-
     this.taskService.getTasks(this.selectedStatus || undefined).subscribe({
       next: (response) => {
-        console.log('API SUCCESS');
-
         this.tasks = response?.tasks || [];
 
         this.loading = false;
 
         this.cdr.detectChanges();
-
-        console.log('AFTER FALSE', this.loading);
       },
 
       error: (error) => {
-        console.log('API ERROR');
-
         this.loading = false;
 
         this.cdr.detectChanges();
-
-        console.log('AFTER ERROR FALSE', this.loading);
       },
     });
   }

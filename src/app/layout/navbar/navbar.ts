@@ -14,11 +14,13 @@ import {
   LucideSunMoon,
   LucideLogOut,
 } from '@lucide/angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
+    RouterLink,
     CommonModule,
     LucideZap,
     LucideUser,
