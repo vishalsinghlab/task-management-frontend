@@ -4,12 +4,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ThemeService {
-  private darkMode = false;
+  private darkMode: boolean = false;
 
   constructor() {
     const savedTheme = localStorage.getItem('theme');
 
-    this.darkMode = savedTheme === 'dark';
+    if (savedTheme) {
+      this.darkMode = savedTheme === 'dark';
+    } else {
+      this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
 
     this.applyTheme();
   }
@@ -27,10 +31,6 @@ export class ThemeService {
   }
 
   private applyTheme(): void {
-    if (this.darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', this.darkMode);
   }
 }

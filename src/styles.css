@@ -2,16 +2,30 @@
 @import 'ngx-toastr/toastr';
 @import 'tailwindcss';
 
+/* =========================
+   Root
+========================= */
+
 html {
   scroll-behavior: smooth;
+  color-scheme: light dark;
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 antialiased transition-colors duration-300;
+  @apply bg-gray-100 text-gray-900 antialiased;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease;
 }
 
 .dark body {
   @apply bg-gray-950 text-gray-100;
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75 85 99) transparent;
 }
 
 /* =========================
@@ -19,7 +33,7 @@ body {
 ========================= */
 
 .container-page {
-  @apply max-w-7xl mx-auto w-full;
+  @apply mx-auto w-full max-w-7xl;
 }
 
 /* =========================
@@ -27,17 +41,19 @@ body {
 ========================= */
 
 .card {
-  @apply bg-white dark:bg-gray-900
+  @apply rounded-2xl
   border border-gray-200 dark:border-gray-800
-  rounded-2xl
-  shadow-sm
+  bg-white dark:bg-gray-900/80
+  backdrop-blur-sm
   p-6
-  transition-all duration-300;
+  shadow-sm dark:shadow-lg dark:shadow-black/20
+  transition-colors duration-300;
 }
 
 /* Smooth hover utility */
 .card-hover {
-  @apply hover:shadow-xl hover:-translate-y-1;
+  @apply hover:-translate-y-1 hover:shadow-xl
+  transition-transform transition-shadow duration-300;
 }
 
 /* =========================
@@ -45,7 +61,10 @@ body {
 ========================= */
 
 .heading-gradient {
-  @apply bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r
+  from-gray-900 to-gray-600
+  dark:from-white dark:to-gray-400
+  bg-clip-text text-transparent;
 }
 
 .text-muted {
@@ -59,37 +78,41 @@ body {
 .btn-primary {
   @apply inline-flex items-center justify-center
   gap-2
-  bg-blue-600 hover:bg-blue-700
-  text-white
-  px-4 py-2.5
   rounded-xl
+  px-4 py-2.5
   font-medium
-  transition-all duration-200
+  text-white
+  bg-blue-600 dark:bg-blue-500
+  hover:bg-blue-700 dark:hover:bg-blue-400
+  disabled:cursor-not-allowed
   disabled:opacity-50
-  disabled:cursor-not-allowed;
+  shadow-sm
+  transition-colors duration-200;
 }
 
 .btn-danger {
   @apply inline-flex items-center justify-center
   gap-2
-  bg-red-500 hover:bg-red-600
-  text-white
-  px-4 py-2.5
   rounded-xl
+  px-4 py-2.5
   font-medium
-  transition-all duration-200;
+  text-white
+  bg-red-500 dark:bg-red-500
+  hover:bg-red-600 dark:hover:bg-red-400
+  shadow-sm
+  transition-colors duration-200;
 }
 
 .btn-secondary {
   @apply inline-flex items-center justify-center
   gap-2
+  rounded-xl
+  px-4 py-2.5
+  font-medium
   bg-gray-200 dark:bg-gray-800
   hover:bg-gray-300 dark:hover:bg-gray-700
   text-gray-900 dark:text-white
-  px-4 py-2.5
-  rounded-xl
-  font-medium
-  transition-all duration-200;
+  transition-colors duration-200;
 }
 
 /* =========================
@@ -98,17 +121,17 @@ body {
 
 .input {
   @apply w-full
-  bg-white dark:bg-gray-900
-  border border-gray-300 dark:border-gray-700
   rounded-xl
+  border border-gray-300 dark:border-gray-700
+  bg-white dark:bg-gray-950
   px-4 py-3
   text-gray-900 dark:text-white
   placeholder:text-gray-400 dark:placeholder:text-gray-500
-  transition-all duration-200
   focus:outline-none
   focus:ring-2
   focus:ring-blue-500/40
-  focus:border-blue-500;
+  focus:border-blue-500
+  transition-colors duration-200;
 }
 
 /* =========================
@@ -117,19 +140,19 @@ body {
 
 .sidebar-link {
   @apply flex items-center gap-3
-  px-4 py-2.5
   rounded-xl
+  px-4 py-2.5
   font-medium
   text-gray-700 dark:text-gray-300
   hover:bg-gray-200 dark:hover:bg-gray-800
   hover:text-gray-900 dark:hover:text-white
-  transition-all duration-200;
+  transition-colors duration-200;
 }
 
 .sidebar-link-active {
-  @apply bg-blue-600/20
-  text-blue-500 dark:text-blue-400
-  border border-blue-500/20
+  @apply border border-blue-500/20
+  bg-blue-600/20
+  text-blue-600 dark:text-blue-400
   shadow-sm;
 }
 
@@ -149,23 +172,23 @@ body {
 
 .line-clamp-2 {
   display: -webkit-box;
+  overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .line-clamp-3 {
   display: -webkit-box;
+  overflow: hidden;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .line-clamp-4 {
   display: -webkit-box;
+  overflow: hidden;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* =========================
@@ -202,7 +225,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+  @apply rounded-full bg-gray-300 dark:bg-gray-700;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -218,7 +241,7 @@ app-task-form {
   width: 100%;
 }
 
-/* Task card: keep delete control from stretching when the edit form is tall */
+/* Task card layout handling */
 .task-card-actions {
   display: flex;
   flex-wrap: wrap;
@@ -236,13 +259,15 @@ app-task-form {
   gap: 0.75rem;
 }
 
-.task-card-actions:has(> app-task-form.task-form--card-open) > app-task-form {
-  flex: none;
-  width: 100%;
+.task-card-actions:has(> app-task-form.task-form--card-open)
+  > app-task-form {
   order: 2;
+  width: 100%;
+  flex: none;
 }
 
-.task-card-actions:has(> app-task-form.task-form--card-open) > .task-card-delete-btn {
+.task-card-actions:has(> app-task-form.task-form--card-open)
+  > .task-card-delete-btn {
   order: 1;
   align-self: flex-end;
 }
@@ -252,5 +277,6 @@ app-task-form {
 ========================= */
 
 ::selection {
-  @apply bg-blue-500/30 text-gray-900 dark:text-white;
+  @apply bg-blue-500/40 text-white;
 }
+

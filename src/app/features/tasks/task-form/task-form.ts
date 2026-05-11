@@ -85,19 +85,37 @@ export class TaskForm implements OnInit {
   task?: Task;
 
   @Input()
-  isModal: boolean = false; // NEW: Flag to indicate modal mode
+  isModal: boolean = false;
 
   @Output()
   taskCreated = new EventEmitter<void>();
 
   @Output()
-  closeModal = new EventEmitter<void>(); // NEW: Emitter for closing modal
+  closeModal = new EventEmitter<void>();
+
+  // NEW: Emitter for form state changes (open/close)
+  @Output()
+  formStateChange = new EventEmitter<boolean>();
 
   users: any[] = [];
 
   loading = false;
 
-  showForm = false;
+  private _showForm = false;
+
+  // Update showForm with getter/setter to emit state changes
+  get showForm(): boolean {
+    return this._showForm;
+  }
+
+  set showForm(value: boolean) {
+    this._showForm = value;
+    // Only emit for create mode (non-modal, no task)
+    if (!this.isModal && !this.task) {
+      this.formStateChange.emit(value);
+    }
+    this.cdr.detectChanges();
+  }
 
   /** Signals parent layout (task card) to stack actions so the editor is full width */
   @HostBinding('class.task-form--card-open')
@@ -114,11 +132,8 @@ export class TaskForm implements OnInit {
 
   taskForm = this.fb.group({
     title: ['', Validators.required],
-
     description: ['', Validators.required],
-
     status: ['PENDING'],
-
     assignedTo: [''],
   });
 
@@ -127,18 +142,13 @@ export class TaskForm implements OnInit {
 
     // Edit Mode - Auto-show form if in modal mode
     if (this.task) {
-      this.showForm = this.isModal ? true : false; // Show modal form immediately if in modal mode
-
+      this.showForm = this.isModal ? true : false;
       this.taskForm.patchValue({
         title: this.task.title,
-
         description: this.task.description,
-
         status: this.task.status,
-
         assignedTo: this.task.assignedTo?._id,
       });
-
       this.cdr.detectChanges();
     }
   }
@@ -148,7 +158,6 @@ export class TaskForm implements OnInit {
       this.userService.getUsers().subscribe({
         next: (response) => {
           this.users = response.users;
-
           this.cdr.detectChanges();
         },
       });
@@ -158,14 +167,13 @@ export class TaskForm implements OnInit {
       this.userService.getTeamMembers().subscribe({
         next: (response) => {
           this.users = [this.currentUser, ...response.users];
-
           this.cdr.detectChanges();
         },
       });
     }
   }
 
-  // NEW: Helper method to close form/modal
+  // Helper method to close form/modal
   closeForm(): void {
     if (this.isModal) {
       this.closeModal.emit();
@@ -177,12 +185,10 @@ export class TaskForm implements OnInit {
   onSubmit(): void {
     if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
-
       return;
     }
 
     this.loading = true;
-
     this.cdr.detectChanges();
 
     // EDIT MODE
@@ -197,11 +203,8 @@ export class TaskForm implements OnInit {
           }
 
           this.loading = false;
-
           this.showForm = false;
-
           this.taskCreated.emit();
-
           this.toastr.success('Task updated successfully');
 
           // Close modal if in modal mode
@@ -214,11 +217,8 @@ export class TaskForm implements OnInit {
 
         error: (error) => {
           console.error(error);
-
           this.loading = false;
-
           this.toastr.error(error.error?.message || 'Something went wrong');
-
           this.cdr.detectChanges();
         },
       });
@@ -234,28 +234,17 @@ export class TaskForm implements OnInit {
         });
 
         this.showForm = false;
-
         this.loading = false;
-
         this.taskCreated.emit();
-
         this.toastr.success('Task created successfully');
-
-        // Close modal if in modal mode (for create modal if implemented)
-        if (this.isModal) {
-          this.closeModal.emit();
-        }
 
         this.cdr.detectChanges();
       },
 
       error: (error) => {
         console.error(error);
-
         this.loading = false;
-
         this.toastr.error(error.error?.message || 'Something went wrong');
-
         this.cdr.detectChanges();
       },
     });

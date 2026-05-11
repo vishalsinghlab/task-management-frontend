@@ -116,6 +116,14 @@ export class TaskList implements OnInit, OnDestroy {
     );
   }
 
+  // Add this property to your component
+  isCreateFormOpen = false;
+
+  // Add this method to listen to form open state from app-task-form
+  onCreateFormStateChange(isOpen: boolean) {
+    this.isCreateFormOpen = isOpen;
+  }
+
   fetchTasks(options?: { silent?: boolean }): void {
     const silent = options?.silent === true;
 
