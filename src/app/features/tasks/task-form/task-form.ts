@@ -84,8 +84,14 @@ export class TaskForm implements OnInit {
   @Input()
   task?: Task;
 
+  @Input()
+  isModal: boolean = false; // NEW: Flag to indicate modal mode
+
   @Output()
   taskCreated = new EventEmitter<void>();
+
+  @Output()
+  closeModal = new EventEmitter<void>(); // NEW: Emitter for closing modal
 
   users: any[] = [];
 
@@ -119,9 +125,9 @@ export class TaskForm implements OnInit {
   ngOnInit(): void {
     this.loadAssignableUsers();
 
-    // Edit Mode
+    // Edit Mode - Auto-show form if in modal mode
     if (this.task) {
-      this.showForm = false;
+      this.showForm = this.isModal ? true : false; // Show modal form immediately if in modal mode
 
       this.taskForm.patchValue({
         title: this.task.title,
@@ -159,6 +165,15 @@ export class TaskForm implements OnInit {
     }
   }
 
+  // NEW: Helper method to close form/modal
+  closeForm(): void {
+    if (this.isModal) {
+      this.closeModal.emit();
+    } else {
+      this.showForm = false;
+    }
+  }
+
   onSubmit(): void {
     if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
@@ -188,6 +203,11 @@ export class TaskForm implements OnInit {
           this.taskCreated.emit();
 
           this.toastr.success('Task updated successfully');
+
+          // Close modal if in modal mode
+          if (this.isModal) {
+            this.closeModal.emit();
+          }
 
           this.cdr.detectChanges();
         },
@@ -220,6 +240,11 @@ export class TaskForm implements OnInit {
         this.taskCreated.emit();
 
         this.toastr.success('Task created successfully');
+
+        // Close modal if in modal mode (for create modal if implemented)
+        if (this.isModal) {
+          this.closeModal.emit();
+        }
 
         this.cdr.detectChanges();
       },

@@ -1,6 +1,4 @@
-<!-- task-form.html -->
-
-<!-- Create Trigger -->
+<!-- Create Trigger - Keep as is for inline creation -->
 @if (!task && !showForm) {
   <div class="flex w-full justify-stretch sm:justify-end">
     <button
@@ -14,8 +12,8 @@
   </div>
 }
 
-<!-- Edit Trigger -->
-@if (task && !showForm) {
+<!-- Edit Trigger - Hide edit button when in modal mode (button will be in parent component) -->
+@if (task && !showForm && !isModal) {
   <button
     type="button"
     (click)="showForm = true"
@@ -29,16 +27,26 @@
 <!-- Form Panel -->
 @if (showForm) {
   <section
-    class="animate-fade-in-up w-full min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900"
-    [ngClass]="task ? 'p-4 sm:p-5' : 'p-5 sm:p-6'"
+    class="w-full min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900"
+    [ngClass]="{
+      'p-4 sm:p-5': task,
+      'p-5 sm:p-6': !task,
+      relative: !isModal,
+      'animate-fade-in-up': isModal,
+    }"
   >
-    <!-- Header -->
+    <!-- Header - Sticky for modal -->
     <div
       class="mb-5 flex items-start justify-between gap-4 border-b border-gray-100 pb-4 dark:border-gray-800"
+      [class.sticky]="isModal"
+      [class.top-0]="isModal"
+      [class.bg-white]="isModal"
+      [class.dark:bg-gray-900]="isModal"
+      [class.z-10]="isModal"
     >
       <div class="flex items-center gap-3 min-w-0">
         <div
-          class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600"
+          class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 shrink-0"
         >
           @if (task) {
             <svg lucideEdit class="h-6 w-6 text-white"></svg>
@@ -60,10 +68,10 @@
         </div>
       </div>
 
-      <!-- Close -->
+      <!-- Close button -->
       <button
         type="button"
-        (click)="showForm = false"
+        (click)="closeForm()"
         class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
         aria-label="Close"
       >
@@ -71,7 +79,7 @@
       </button>
     </div>
 
-    <!-- Form -->
+    <!-- Form - Make it scrollable -->
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-5">
       <!-- Title -->
       <div>
@@ -121,9 +129,9 @@
           <textarea
             [attr.id]="'task-description-' + fieldIdSuffix"
             formControlName="description"
-            [attr.rows]="task ? 4 : 5"
+            rows="3"
             placeholder="Describe what needs to be done..."
-            class="min-h-[120px] w-full resize-y rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-sm text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            class="min-h-[100px] w-full resize-y rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-sm text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             [class.border-red-500]="
               taskForm.get('description')?.invalid && taskForm.get('description')?.touched
             "
@@ -205,15 +213,20 @@
         </div>
       }
 
-      <!-- Actions -->
+      <!-- Actions - Sticky footer for modal -->
       <div
-        class="flex flex-col-reverse gap-3 border-t border-gray-100 pt-5 dark:border-gray-800 sm:flex-row sm:flex-wrap sm:justify-end"
+        class="flex flex-col-reverse gap-3 pt-5 mt-5 border-t border-gray-100 dark:border-gray-800 sm:flex-row sm:flex-wrap sm:justify-end"
+        [class.sticky]="isModal"
+        [class.bottom-0]="isModal"
+        [class.bg-white]="isModal"
+        [class.dark:bg-gray-900]="isModal"
+        [class.pb-0]="isModal"
       >
         <!-- Cancel -->
         <button
           type="button"
-          (click)="showForm = false"
-          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+          (click)="closeForm()"
+          class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 sm:w-auto"
         >
           <svg lucideXCircle class="h-5 w-5"></svg>
           Cancel
@@ -223,7 +236,7 @@
         <button
           type="submit"
           [disabled]="loading"
-          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           @if (loading) {
             <svg lucideLoader2 class="h-5 w-5 animate-spin"></svg>

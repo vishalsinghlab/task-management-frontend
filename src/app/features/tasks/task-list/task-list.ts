@@ -33,6 +33,7 @@ import {
   LucideUser,
   LucideCalendar,
   LucideTrash2,
+  LucidePencil,
 } from '@lucide/angular';
 @Component({
   selector: 'app-task-list',
@@ -58,6 +59,7 @@ import {
     LucideUser,
     LucideCalendar,
     LucideTrash2,
+    LucidePencil,
   ],
 
   templateUrl: './task-list.html',
@@ -171,8 +173,13 @@ export class TaskList implements OnInit, OnDestroy {
     });
   }
 
-  onTaskCreated(): void {
+  // Update your onTaskCreated method
+  onTaskCreated() {
     this.fetchTasks();
+    // If this was called from modal, close it
+    if (this.showEditModal) {
+      this.closeEditModal();
+    }
   }
 
   getStatusClass(status: string): string {
@@ -249,5 +256,25 @@ export class TaskList implements OnInit, OnDestroy {
 
   trackByTaskId(index: number, task: Task): string {
     return task._id;
+  }
+
+  // Add these properties to your component
+  selectedTask: any = null;
+  showEditModal = false;
+
+  // Add these methods
+  openEditModal(task: any) {
+    this.selectedTask = task;
+    this.showEditModal = true;
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+    this.selectedTask = null;
+  }
+
+  onTaskUpdated() {
+    this.fetchTasks({ silent: false }); // Refresh the task list
+    this.closeEditModal();
   }
 }

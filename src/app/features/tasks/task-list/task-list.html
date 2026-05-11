@@ -200,12 +200,17 @@
                 <!-- Actions -->
                 <div class="mt-6 border-t border-gray-100 pt-5 dark:border-gray-800">
                   <div class="flex flex-col gap-3">
-                    <!-- Form -->
-                    <div class="w-full">
-                      <app-task-form [task]="task" (taskCreated)="onTaskCreated()"></app-task-form>
-                    </div>
+                    <!-- Edit Button - Opens Modal -->
+                    <button
+                      type="button"
+                      (click)="openEditModal(task)"
+                      class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.02] hover:bg-blue-700 active:scale-[0.98]"
+                    >
+                      <svg lucidePencil class="h-5 w-5"></svg>
+                      Edit
+                    </button>
 
-                    <!-- Delete -->
+                    <!-- Delete Button -->
                     <button
                       type="button"
                       (click)="onDelete(task._id)"
@@ -224,3 +229,28 @@
     </div>
   </div>
 </div>
+
+<!-- Edit Task Modal -->
+@if (showEditModal && selectedTask) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div
+      class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-all"
+      (click)="closeEditModal()"
+    ></div>
+
+    <!-- Modal Content with better scrollbar -->
+    <div class="relative w-full max-w-2xl max-h-[90vh] animate-fade-in-up">
+      <div
+        class="overflow-y-auto max-h-[90vh] rounded-3xl scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800"
+      >
+        <app-task-form
+          [task]="selectedTask"
+          [isModal]="true"
+          (taskCreated)="onTaskUpdated()"
+          (closeModal)="closeEditModal()"
+        ></app-task-form>
+      </div>
+    </div>
+  </div>
+}
