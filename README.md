@@ -216,19 +216,23 @@ http://localhost:4200
 
 ## Login Page
 
-(Add screenshot here)
+![Login](./screenshots/login.png)
+
+## Register
+
+![Dashboard](./screenshots/register.png)
 
 ## Dashboard
 
-(Add screenshot here)
+![Dashboard](./screenshots/dashboard.png)
 
 ## Task Management
 
-(Add screenshot here)
+![Tasks](./screenshots/tasks.png)
 
 ## User Management
 
-(Add screenshot here)
+![User](./screenshots/users.png)
 
 ---
 
@@ -236,7 +240,7 @@ http://localhost:4200
 
 ## Frontend
 
-Recommended: Vercel
+Recommended: Netlify
 
 ## Backend
 
