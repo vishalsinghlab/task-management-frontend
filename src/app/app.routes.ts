@@ -11,18 +11,27 @@ import { NotFound } from './shared/pages/not-found/not-found';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
+
+  {
     path: 'login',
     component: Login,
   },
+
   {
     path: 'register',
     component: Register,
   },
+
   {
     path: 'dashboard',
     component: Dashboard,
     canActivate: [authGuard],
   },
+
   {
     path: 'tasks',
     component: TaskList,
@@ -34,6 +43,7 @@ export const routes: Routes = [
     component: UserList,
     canActivate: [authGuard, roleGuard],
   },
+
   {
     path: '**',
     component: NotFound,
