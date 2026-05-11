@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -24,6 +24,8 @@ export class Register {
 
   private toastr = inject(ToastrService);
 
+  private cdr = inject(ChangeDetectorRef);
+
   loading = false;
 
   registerForm = this.fb.group({
@@ -48,12 +50,14 @@ export class Register {
       next: () => {
         this.toastr.info('Signup Successful');
         this.router.navigate(['/login']);
+        this.cdr.detectChanges();
       },
 
       error: (error) => {
         console.error(error);
         this.loading = false;
         this.toastr.error(error?.error?.message || 'Failed to Signup');
+        this.cdr.detectChanges();
       },
     });
   }

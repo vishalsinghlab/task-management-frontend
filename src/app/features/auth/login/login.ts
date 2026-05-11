@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -23,6 +23,8 @@ export class Login {
 
   private toastr = inject(ToastrService);
 
+  private cdr = inject(ChangeDetectorRef);
+
   loading = false;
 
   loginForm = this.fb.group({
@@ -43,12 +45,14 @@ export class Login {
       next: () => {
         this.toastr.info('Login Successful');
         this.router.navigate(['/dashboard']);
+        this.cdr.detectChanges();
       },
 
       error: (error) => {
         console.error(error);
         this.loading = false;
         this.toastr.error(error?.error?.message || 'Failed to login');
+        this.cdr.detectChanges();
       },
     });
   }
