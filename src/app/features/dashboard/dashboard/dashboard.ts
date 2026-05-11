@@ -6,15 +6,26 @@ import { Sidebar } from '../../../layout/sidebar/sidebar';
 
 import { TaskService } from '../../../core/services/task';
 
+import { ChangeDetectorRef } from '@angular/core';
+
+import {
+  LucideClipboardList,
+  LucideCheckCircle,
+  LucideClock,
+  LucideLoader2,
+} from '@lucide/angular';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [Navbar, Sidebar],
+  imports: [Navbar, Sidebar, LucideClipboardList, LucideCheckCircle, LucideClock, LucideLoader2],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
   private taskService = inject(TaskService);
+
+  private cdr = inject(ChangeDetectorRef);
 
   totalTasks = 0;
 
@@ -40,6 +51,8 @@ export class Dashboard implements OnInit {
         this.pendingTasks = tasks.filter((task: any) => task.status === 'PENDING').length;
 
         this.inProgressTasks = tasks.filter((task: any) => task.status === 'IN_PROGRESS').length;
+
+        this.cdr.detectChanges();
       },
     });
   }

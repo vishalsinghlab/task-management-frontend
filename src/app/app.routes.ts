@@ -7,6 +7,7 @@ import { Dashboard } from './features/dashboard/dashboard/dashboard';
 import { TaskList } from './features/tasks/task-list/task-list';
 import { UserList } from './features/users/user-list/user-list';
 import { roleGuard } from './core/guards/role';
+import { NotFound } from './shared/pages/not-found/not-found';
 
 export const routes: Routes = [
   {
@@ -32,5 +33,9 @@ export const routes: Routes = [
     path: 'users',
     component: UserList,
     canActivate: [authGuard, roleGuard],
+  },
+  {
+    path: '**',
+    component: NotFound,
   },
 ];

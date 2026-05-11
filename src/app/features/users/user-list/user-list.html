@@ -1,93 +1,377 @@
-<div class="flex min-h-screen bg-gray-100">
-  <app-sidebar />
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900"
+>
+  <!-- Mobile First Layout -->
+  <div class="flex flex-col md:flex-row">
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
 
-  <div class="flex-1 flex flex-col">
-    <app-navbar />
+    <!-- Main Content -->
+    <div class="flex min-w-0 flex-1 flex-col">
+      <!-- Navbar -->
+      <app-navbar></app-navbar>
 
-    <main class="p-6">
-      <!-- Header -->
-      <div class="mb-6">
-        <h1 class="text-3xl font-bold">User Management</h1>
+      <!-- Page Content -->
+      <main class="flex-1 px-4 py-5 sm:px-5 sm:py-6 md:px-6 lg:px-8">
+        <!-- Header -->
+        <section
+          class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between"
+        >
+          <!-- Left -->
+          <div class="min-w-0">
+            <h1
+              class="text-3xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 bg-clip-text text-transparent dark:from-white dark:via-gray-200 dark:to-gray-500 sm:text-4xl lg:text-4xl pb-4"
+            >
+              User Management
+            </h1>
 
-        <p class="text-gray-500 mt-1">Manage employees and team hierarchy</p>
-      </div>
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 sm:text-base">
+              Manage employees and team hierarchy
+            </p>
+          </div>
 
-      <!-- Loading -->
-      @if (loading) {
-        <p>Loading users...</p>
-      }
+          <!-- Stats -->
+          <div
+            class="flex w-full items-center gap-3 rounded-3xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:w-auto sm:min-w-[180px]"
+          >
+            <div
+              class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 dark:bg-blue-900/30"
+            >
+              <svg lucideUsers class="h-7 w-7 text-blue-600 dark:text-blue-400"></svg>
+            </div>
 
-      <!-- User Table -->
-      @if (!loading) {
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-100 border-b">
-                <tr>
-                  <th class="text-left p-4">Username</th>
+            <div>
+              <p
+                class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+              >
+                Total Users
+              </p>
 
-                  <th class="text-left p-4">Email</th>
+              <h2 class="text-2xl font-black text-gray-900 dark:text-white">
+                {{ users.length }}
+              </h2>
+            </div>
+          </div>
+        </section>
 
-                  <th class="text-left p-4">Role</th>
+        <!-- Loading -->
+        @if (loading) {
+          <div class="flex min-h-[300px] items-center justify-center">
+            <app-loading-spinner></app-loading-spinner>
+          </div>
+        }
 
-                  <th class="text-left p-4">Team Lead</th>
+        <!-- Content -->
+        @if (!loading) {
+          <!-- Mobile Cards -->
+          <div class="space-y-4 md:hidden">
+            @for (user of users; track user._id) {
+              <article
+                class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-all duration-300 dark:border-gray-800 dark:bg-gray-900"
+              >
+                <div class="p-5">
+                  <!-- Top -->
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="flex min-w-0 items-center gap-3">
+                      <!-- Avatar -->
+                      <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-lg font-bold text-white"
+                      >
+                        {{ user.username.charAt(0).toUpperCase() }}
+                      </div>
 
-                  @if (currentUser?.role === 'MANAGER') {
-                    <th class="text-left p-4">Assign Team Lead</th>
-                  }
-                </tr>
-              </thead>
+                      <!-- User -->
+                      <div class="min-w-0">
+                        <h3 class="truncate text-base font-bold text-gray-900 dark:text-white">
+                          {{ user.username }}
+                        </h3>
 
-              <tbody>
-                @for (user of users; track user._id) {
-                  <tr class="border-b hover:bg-gray-50">
-                    <td class="p-4 font-medium">
-                      {{ user.username }}
-                    </td>
+                        <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                          {{ user.email }}
+                        </p>
+                      </div>
+                    </div>
 
-                    <td class="p-4">
-                      {{ user.email }}
-                    </td>
-
-                    <td class="p-4">
-                      <span class="px-3 py-1 rounded-full text-sm bg-gray-200">
-                        {{ user.role }}
-                      </span>
-                    </td>
-
-                    <td class="p-4">
-                      {{ getTeamLeadName(user) }}
-                    </td>
-
-                    <!-- Manager Controls -->
-                    @if (currentUser?.role === 'MANAGER') {
-                      <td class="p-4">
-                        @if (user.role === 'EMPLOYEE') {
-                          <select
-                            class="border rounded-lg px-3 py-2"
-                            (change)="assignEmployee(user._id, $any($event.target).value)"
-                          >
-                            <option value="">Select Team Lead</option>
-
-                            @for (lead of teamLeads; track lead._id) {
-                              <option
-                                [value]="lead._id"
-                                [selected]="user.teamLead?._id === lead._id"
-                              >
-                                {{ lead.username }}
-                              </option>
-                            }
-                          </select>
+                    <!-- Role -->
+                    <span
+                      class="inline-flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
+                      [class]="getRoleClass(user.role)"
+                    >
+                      @switch (user.role) {
+                        @case ('MANAGER') {
+                          <svg lucideBriefcase class="h-3 w-3"></svg>
                         }
-                      </td>
+                        @case ('TEAM_LEAD') {
+                          <svg lucideUsers class="h-3 w-3"></svg>
+                        }
+                        @default {
+                          <svg lucideUser class="h-3 w-3"></svg>
+                        }
+                      }
+                      {{ user.role }}
+                    </span>
+                  </div>
+
+                  <!-- Team Lead -->
+                  <div class="mt-5 border-t border-gray-100 pt-4 dark:border-gray-800">
+                    <p
+                      class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                    >
+                      Team Lead
+                    </p>
+
+                    @if (user.teamLead) {
+                      <div class="flex items-center gap-2">
+                        <div
+                          class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800"
+                        >
+                          <svg lucideUserCog class="h-4 w-4 text-gray-600 dark:text-gray-400"></svg>
+                        </div>
+
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {{ user.teamLead.username }}
+                        </span>
+                      </div>
+                    } @else {
+                      <p class="text-sm italic text-gray-400 dark:text-gray-500">Not assigned</p>
+                    }
+                  </div>
+
+                  <!-- Assign Lead -->
+                  @if (currentUser?.role === 'MANAGER' && user.role === 'EMPLOYEE') {
+                    <div class="mt-5">
+                      <label
+                        class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                      >
+                        Assign Team Lead
+                      </label>
+
+                      <select
+                        class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                        (change)="assignEmployee(user._id, $any($event.target).value)"
+                      >
+                        <option value="">Select Team Lead</option>
+
+                        @for (lead of teamLeads; track lead._id) {
+                          <option [value]="lead._id" [selected]="user.teamLead?._id === lead._id">
+                            {{ lead.username }}
+                          </option>
+                        }
+                      </select>
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+
+            <!-- Empty -->
+            @if (users.length === 0) {
+              <section
+                class="rounded-3xl border border-gray-200 bg-white px-6 py-14 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900"
+              >
+                <div
+                  class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                >
+                  <svg lucideUsers class="h-12 w-12 text-gray-400 dark:text-gray-500"></svg>
+                </div>
+
+                <h2 class="mt-6 text-2xl font-black text-gray-900 dark:text-white">
+                  No Users Found
+                </h2>
+
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  There are no users in the system yet.
+                </p>
+              </section>
+            }
+          </div>
+
+          <!-- Desktop Table -->
+          <section
+            class="hidden overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900 md:block"
+          >
+            <div class="overflow-x-auto">
+              <table class="min-w-full">
+                <!-- Head -->
+                <thead
+                  class="border-b border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50"
+                >
+                  <tr>
+                    <th
+                      class="px-6 py-5 text-left text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                    >
+                      <div class="flex items-center gap-2">
+                        <svg lucideUser class="h-4 w-4"></svg>
+                        <span>User</span>
+                      </div>
+                    </th>
+
+                    <th
+                      class="px-6 py-5 text-left text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                    >
+                      <div class="flex items-center gap-2">
+                        <svg lucideMail class="h-4 w-4"></svg>
+                        <span>Email</span>
+                      </div>
+                    </th>
+
+                    <th
+                      class="px-6 py-5 text-left text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                    >
+                      <div class="flex items-center gap-2">
+                        <svg lucideTag class="h-4 w-4"></svg>
+                        <span>Role</span>
+                      </div>
+                    </th>
+
+                    <th
+                      class="px-6 py-5 text-left text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                    >
+                      <div class="flex items-center gap-2">
+                        <svg lucideUserCog class="h-4 w-4"></svg>
+                        <span>Team Lead</span>
+                      </div>
+                    </th>
+
+                    @if (currentUser?.role === 'MANAGER') {
+                      <th
+                        class="px-6 py-5 text-left text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                      >
+                        <div class="flex items-center gap-2">
+                          <svg lucideSettings class="h-4 w-4"></svg>
+                          <span>Assign Lead</span>
+                        </div>
+                      </th>
                     }
                   </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
-      }
-    </main>
+                </thead>
+
+                <!-- Body -->
+                <tbody>
+                  @for (user of users; track user._id) {
+                    <tr
+                      class="border-b border-gray-100 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900/40"
+                    >
+                      <!-- User -->
+                      <td class="px-6 py-5">
+                        <div class="flex items-center gap-3">
+                          <div
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white"
+                          >
+                            {{ user.username.charAt(0).toUpperCase() }}
+                          </div>
+
+                          <div>
+                            <p class="font-semibold text-gray-900 dark:text-white">
+                              {{ user.username }}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <!-- Email -->
+                      <td class="px-6 py-5 text-sm text-gray-600 dark:text-gray-400">
+                        {{ user.email }}
+                      </td>
+
+                      <!-- Role -->
+                      <td class="px-6 py-5">
+                        <span
+                          class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
+                          [class]="getRoleClass(user.role)"
+                        >
+                          @switch (user.role) {
+                            @case ('MANAGER') {
+                              <svg lucideBriefcase class="h-3 w-3"></svg>
+                            }
+                            @case ('TEAM_LEAD') {
+                              <svg lucideUsers class="h-3 w-3"></svg>
+                            }
+                            @default {
+                              <svg lucideUser class="h-3 w-3"></svg>
+                            }
+                          }
+                          {{ user.role }}
+                        </span>
+                      </td>
+
+                      <!-- Lead -->
+                      <td class="px-6 py-5">
+                        @if (user.teamLead) {
+                          <div class="flex items-center gap-2">
+                            <div
+                              class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800"
+                            >
+                              <svg
+                                lucideUserCog
+                                class="h-4 w-4 text-gray-600 dark:text-gray-400"
+                              ></svg>
+                            </div>
+
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                              {{ user.teamLead.username }}
+                            </span>
+                          </div>
+                        } @else {
+                          <span class="text-sm italic text-gray-400 dark:text-gray-500">
+                            Not assigned
+                          </span>
+                        }
+                      </td>
+
+                      <!-- Assign -->
+                      @if (currentUser?.role === 'MANAGER') {
+                        <td class="px-6 py-5">
+                          @if (user.role === 'EMPLOYEE') {
+                            <select
+                              class="w-full min-w-[180px] rounded-2xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                              (change)="assignEmployee(user._id, $any($event.target).value)"
+                            >
+                              <option value="">Select Team Lead</option>
+
+                              @for (lead of teamLeads; track lead._id) {
+                                <option
+                                  [value]="lead._id"
+                                  [selected]="user.teamLead?._id === lead._id"
+                                >
+                                  {{ lead.username }}
+                                </option>
+                              }
+                            </select>
+                          } @else {
+                            <span class="text-sm italic text-gray-400 dark:text-gray-500">
+                              N/A
+                            </span>
+                          }
+                        </td>
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty -->
+            @if (users.length === 0) {
+              <div class="px-6 py-20 text-center">
+                <div
+                  class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                >
+                  <svg lucideUsers class="h-12 w-12 text-gray-400 dark:text-gray-500"></svg>
+                </div>
+
+                <h2 class="mt-6 text-2xl font-black text-gray-900 dark:text-white">
+                  No Users Found
+                </h2>
+
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  There are no users in the system yet.
+                </p>
+              </div>
+            }
+          </section>
+        }
+      </main>
+    </div>
   </div>
 </div>

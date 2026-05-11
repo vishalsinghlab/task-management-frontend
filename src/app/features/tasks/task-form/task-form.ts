@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -11,12 +20,52 @@ import { UserService } from '../../../core/services/user';
 import { AuthService } from '../../../core/services/auth';
 
 import { Task } from '../../../core/models/task';
+
 import { ToastrService } from 'ngx-toastr';
+
+import {
+  LucidePlus,
+  LucidePencil,
+  LucideEdit,
+  LucidePlusSquare,
+  LucideX,
+  LucideHeading,
+  LucideFileText,
+  LucideClock,
+  LucideLoader2,
+  LucideCheckCircle,
+  LucideListTodo,
+  LucideUsers,
+  LucideXCircle,
+  LucideCheck,
+} from '@lucide/angular';
+
 @Component({
   selector: 'app-task-form',
+
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LucidePlus,
+    LucidePencil,
+    LucideEdit,
+    LucidePlusSquare,
+    LucideX,
+    LucideHeading,
+    LucideFileText,
+    LucideClock,
+    LucideLoader2,
+    LucideCheckCircle,
+    LucideListTodo,
+    LucideUsers,
+    LucideXCircle,
+    LucideCheck,
+  ],
+
   templateUrl: './task-form.html',
+
   styleUrl: './task-form.css',
 })
 export class TaskForm implements OnInit {
@@ -30,6 +79,8 @@ export class TaskForm implements OnInit {
 
   private toastr = inject(ToastrService);
 
+  private cdr = inject(ChangeDetectorRef);
+
   @Input()
   task?: Task;
 
@@ -41,6 +92,17 @@ export class TaskForm implements OnInit {
   loading = false;
 
   showForm = false;
+
+  /** Signals parent layout (task card) to stack actions so the editor is full width */
+  @HostBinding('class.task-form--card-open')
+  get cardEditorOpen(): boolean {
+    return !!this.task && this.showForm;
+  }
+
+  /** Stable field id suffix so labels stay unique per card / create form */
+  get fieldIdSuffix(): string {
+    return this.task?._id ?? 'create';
+  }
 
   currentUser = this.authService.getUser();
 
@@ -70,6 +132,8 @@ export class TaskForm implements OnInit {
 
         assignedTo: this.task.assignedTo?._id,
       });
+
+      this.cdr.detectChanges();
     }
   }
 
@@ -78,6 +142,8 @@ export class TaskForm implements OnInit {
       this.userService.getUsers().subscribe({
         next: (response) => {
           this.users = response.users;
+
+          this.cdr.detectChanges();
         },
       });
     }
@@ -86,6 +152,8 @@ export class TaskForm implements OnInit {
       this.userService.getTeamMembers().subscribe({
         next: (response) => {
           this.users = [this.currentUser, ...response.users];
+
+          this.cdr.detectChanges();
         },
       });
     }
@@ -99,6 +167,8 @@ export class TaskForm implements OnInit {
     }
 
     this.loading = true;
+
+    this.cdr.detectChanges();
 
     // EDIT MODE
     if (this.task) {
@@ -118,6 +188,8 @@ export class TaskForm implements OnInit {
           this.taskCreated.emit();
 
           this.toastr.success('Task updated successfully');
+
+          this.cdr.detectChanges();
         },
 
         error: (error) => {
@@ -126,6 +198,8 @@ export class TaskForm implements OnInit {
           this.loading = false;
 
           this.toastr.error(error.error?.message || 'Something went wrong');
+
+          this.cdr.detectChanges();
         },
       });
 
@@ -146,6 +220,8 @@ export class TaskForm implements OnInit {
         this.taskCreated.emit();
 
         this.toastr.success('Task created successfully');
+
+        this.cdr.detectChanges();
       },
 
       error: (error) => {
@@ -154,6 +230,8 @@ export class TaskForm implements OnInit {
         this.loading = false;
 
         this.toastr.error(error.error?.message || 'Something went wrong');
+
+        this.cdr.detectChanges();
       },
     });
   }

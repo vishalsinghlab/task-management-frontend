@@ -1,75 +1,242 @@
-<!-- Create Button -->
-@if (!task) {
+<!-- task-form.html -->
+
+<!-- Create Trigger -->
+@if (!task && !showForm) {
+  <div class="flex w-full justify-stretch sm:justify-end">
+    <button
+      type="button"
+      (click)="showForm = true"
+      class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98] sm:w-auto"
+    >
+      <svg lucidePlus class="h-5 w-5"></svg>
+      <span>Add Task</span>
+    </button>
+  </div>
+}
+
+<!-- Edit Trigger -->
+@if (task && !showForm) {
   <button
-    (click)="showForm = !showForm"
-    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+    type="button"
+    (click)="showForm = true"
+    class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98]"
   >
-    Add Task
+    <svg lucidePencil class="h-4 w-4"></svg>
+    <span>Edit</span>
   </button>
 }
 
-@if (showForm || task) {
-  <div class="bg-white rounded-2xl shadow p-6 mt-4">
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-4">
+<!-- Form Panel -->
+@if (showForm) {
+  <section
+    class="animate-fade-in-up w-full min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900"
+    [ngClass]="task ? 'p-4 sm:p-5' : 'p-5 sm:p-6'"
+  >
+    <!-- Header -->
+    <div
+      class="mb-5 flex items-start justify-between gap-4 border-b border-gray-100 pb-4 dark:border-gray-800"
+    >
+      <div class="flex items-center gap-3 min-w-0">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600"
+        >
+          @if (task) {
+            <svg lucideEdit class="h-6 w-6 text-white"></svg>
+          } @else {
+            <svg lucidePlusSquare class="h-6 w-6 text-white"></svg>
+          }
+        </div>
+
+        <div class="min-w-0">
+          <h3 class="truncate text-xl font-black tracking-tight text-gray-900 dark:text-white">
+            {{ task ? 'Edit Task' : 'Create New Task' }}
+          </h3>
+
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+            {{
+              task ? 'Update task details and assignments' : 'Create and assign tasks to your team'
+            }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Close -->
+      <button
+        type="button"
+        (click)="showForm = false"
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+        aria-label="Close"
+      >
+        <svg lucideX class="h-5 w-5"></svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-5">
       <!-- Title -->
-      <input
-        type="text"
-        formControlName="title"
-        placeholder="Task title"
-        class="w-full border rounded-lg px-4 py-2"
-      />
+      <div>
+        <label
+          class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
+          [attr.for]="'task-title-' + fieldIdSuffix"
+        >
+          Title
+        </label>
+
+        <div class="relative">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+            <svg lucideHeading class="h-5 w-5 text-gray-400"></svg>
+          </div>
+
+          <input
+            [attr.id]="'task-title-' + fieldIdSuffix"
+            type="text"
+            formControlName="title"
+            placeholder="Short, clear task title"
+            class="w-full rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-sm text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            [class.border-red-500]="
+              taskForm.get('title')?.invalid && taskForm.get('title')?.touched
+            "
+          />
+        </div>
+
+        @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+          <p class="mt-2 text-xs font-medium text-red-500">Title is required</p>
+        }
+      </div>
 
       <!-- Description -->
-      <textarea
-        formControlName="description"
-        rows="4"
-        placeholder="Task description"
-        class="w-full border rounded-lg px-4 py-2"
-      ></textarea>
+      <div>
+        <label
+          class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
+          [attr.for]="'task-description-' + fieldIdSuffix"
+        >
+          Description
+        </label>
+
+        <div class="relative">
+          <div class="pointer-events-none absolute left-0 top-4 flex items-start pl-4">
+            <svg lucideFileText class="h-5 w-5 text-gray-400"></svg>
+          </div>
+
+          <textarea
+            [attr.id]="'task-description-' + fieldIdSuffix"
+            formControlName="description"
+            [attr.rows]="task ? 4 : 5"
+            placeholder="Describe what needs to be done..."
+            class="min-h-[120px] w-full resize-y rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-sm text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            [class.border-red-500]="
+              taskForm.get('description')?.invalid && taskForm.get('description')?.touched
+            "
+          ></textarea>
+        </div>
+
+        @if (taskForm.get('description')?.invalid && taskForm.get('description')?.touched) {
+          <p class="mt-2 text-xs font-medium text-red-500">Description is required</p>
+        }
+      </div>
 
       <!-- Status -->
-      <select formControlName="status" class="w-full border rounded-lg px-4 py-2">
-        <option value="PENDING">Pending</option>
+      <div>
+        <label
+          class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
+          [attr.for]="'task-status-' + fieldIdSuffix"
+        >
+          Status
+        </label>
 
-        <option value="IN_PROGRESS">In Progress</option>
+        <div class="relative">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+            @let statusControl = taskForm.get('status');
+            @switch (statusControl?.value) {
+              @case ('PENDING') {
+                <svg lucideClock class="h-5 w-5 text-yellow-500"></svg>
+              }
+              @case ('IN_PROGRESS') {
+                <svg lucideLoader2 class="h-5 w-5 animate-spin text-blue-500"></svg>
+              }
+              @case ('COMPLETED') {
+                <svg lucideCheckCircle class="h-5 w-5 text-green-500"></svg>
+              }
+              @default {
+                <svg lucideListTodo class="h-5 w-5 text-gray-400"></svg>
+              }
+            }
+          </div>
 
-        <option value="COMPLETED">Completed</option>
-      </select>
+          <select
+            [attr.id]="'task-status-' + fieldIdSuffix"
+            formControlName="status"
+            class="w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-sm font-medium text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          >
+            <option value="PENDING">Pending</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+        </div>
+      </div>
 
-      <!-- Assignment -->
+      <!-- Assignee -->
       @if (currentUser?.role !== 'EMPLOYEE') {
-        <select formControlName="assignedTo" class="w-full border rounded-lg px-4 py-2">
-          <option value="">Select Assignee</option>
+        <div>
+          <label
+            class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
+            [attr.for]="'task-assignee-' + fieldIdSuffix"
+          >
+            Assignee
+          </label>
 
-          @for (user of users; track user._id) {
-            <option [value]="user._id">
-              {{ user.username }}
-              ({{ user.role }})
-            </option>
-          }
-        </select>
+          <div class="relative">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <svg lucideUsers class="h-5 w-5 text-gray-400"></svg>
+            </div>
+
+            <select
+              [attr.id]="'task-assignee-' + fieldIdSuffix"
+              formControlName="assignedTo"
+              class="w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3 text-sm font-medium text-gray-900 outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+              <option value="">Select assignee</option>
+
+              @for (user of users; track user._id) {
+                <option [value]="user._id">{{ user.username }} ({{ user.role }})</option>
+              }
+            </select>
+          </div>
+        </div>
       }
 
-      <!-- Buttons -->
-      <div class="flex gap-2">
+      <!-- Actions -->
+      <div
+        class="flex flex-col-reverse gap-3 border-t border-gray-100 pt-5 dark:border-gray-800 sm:flex-row sm:flex-wrap sm:justify-end"
+      >
+        <!-- Cancel -->
+        <button
+          type="button"
+          (click)="showForm = false"
+          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 sm:w-auto"
+        >
+          <svg lucideXCircle class="h-5 w-5"></svg>
+          Cancel
+        </button>
+
+        <!-- Submit -->
         <button
           type="submit"
           [disabled]="loading"
-          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+          class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.01] hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
+          @if (loading) {
+            <svg lucideLoader2 class="h-5 w-5 animate-spin"></svg>
+          } @else {
+            @if (task) {
+              <svg lucideCheck class="h-5 w-5"></svg>
+            } @else {
+              <svg lucidePlus class="h-5 w-5"></svg>
+            }
+          }
           {{ loading ? 'Saving...' : task ? 'Update Task' : 'Create Task' }}
         </button>
-
-        @if (!task) {
-          <button
-            type="button"
-            (click)="showForm = false"
-            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
-          >
-            Cancel
-          </button>
-        }
       </div>
     </form>
-  </div>
+  </section>
 }

@@ -1,19 +1,37 @@
-import { Component, inject } from '@angular/core';
-
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 import { AuthService } from '../../core/services/auth';
+import {
+  LucideMenu,
+  LucideX,
+  LucideLayoutDashboard,
+  LucideCheckSquare,
+  LucideUsers,
+  LucideZap,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    LucideMenu,
+    LucideX,
+    LucideLayoutDashboard,
+    LucideCheckSquare,
+    LucideUsers,
+    LucideZap,
+  ],
   templateUrl: './sidebar.html',
-  styleUrl: './sidebar.css',
+  styleUrls: ['./sidebar.css'],
 })
 export class Sidebar {
-  private authService = inject(AuthService);
+  user = new AuthService().getUser();
+  isSidebarOpen = false;
 
-  user = this.authService.getUser();
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
 }
