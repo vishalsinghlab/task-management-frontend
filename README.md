@@ -216,7 +216,8 @@ http://localhost:4200
 
 # Demo Credentials
 
-Use the following demo accounts to explore different role-based dashboards and permissions.
+Use the following demo accounts to explore different role-based dashboards and permissions
+or you could create your own.
 
 | Role      | Email                 | Password     |
 | --------- | --------------------- | ------------ |
