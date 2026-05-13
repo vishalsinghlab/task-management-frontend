@@ -1,4 +1,3 @@
-````md
 # Task Management System
 
 A full-stack Task Management Application built using the MEAN stack (MongoDB, Express.js, Angular 19, Node.js) with JWT authentication, role-based authorization, and real-time updates using Socket.IO.
